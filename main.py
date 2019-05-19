@@ -3,11 +3,13 @@
 
 import pathlib
 import librosa
+import librosa.display
 import numpy as np
 import matplotlib.pyplot as plt
-import melodia
 import synthesize_wave
 import synthesize_midi
+import melodia
+import crepe_wrap
 
 
 def example_audio_file():
@@ -22,7 +24,8 @@ def run(plot=True):
     y, sr = librosa.load(filename, sr=44100, mono=True)
 
     print('extracting f0...')
-    melody_raw, timestamps = melodia.get_raw_melody(y, sr)
+    # melody_raw, timestamps = melodia.get_raw_melody(y, sr)
+    melody_raw, timestamps = crepe_wrap.extract(y, sr, minfqr=120, maxfqr=720, step_size=40)
 
     if plot:
         # plot melody
