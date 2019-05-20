@@ -10,6 +10,7 @@ import synthesize_wave
 import synthesize_midi
 import melodia
 import crepe_wrap
+import praat
 
 
 def example_audio_file():
@@ -17,15 +18,21 @@ def example_audio_file():
     return './example/hongdou.wav'
 
 
-def run(plot=True):
+def run(method='crepe', plot=True):
     filename = example_audio_file()
 
     print('loading audio file...')
     y, sr = librosa.load(filename, sr=44100, mono=True)
 
     print('extracting f0...')
-    # melody_raw, timestamps = melodia.get_raw_melody(y, sr)
-    melody_raw, timestamps = crepe_wrap.extract(y, sr, minfqr=120, maxfqr=720, step_size=40)
+    if method == 'melodia':
+        melody_raw, timestamps = melodia.get_raw_melody(y, sr)
+    elif method == 'crepe':
+        melody_raw, timestamps = crepe_wrap.extract(y, sr, minfqr=120, maxfqr=720, step_size=40)
+    elif method == 'praat':
+        melody_raw, timestamps = praat.extract(filename)
+    else:
+        melody_raw, timestamps = None, None
 
     if plot:
         # plot melody
@@ -84,4 +91,4 @@ def run(plot=True):
 
 
 if __name__ == '__main__':
-    run()
+    run(method='praat')
